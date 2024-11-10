@@ -29,10 +29,10 @@ export async function GET(req: Request) {
             return new NextResponse("User not found", {status: 404})
         }
 
-        // console.log("Current user:", currentUser)
-        // const currentUserGenres = Array.isArray(currentUser.musicalGenres)
-        //     ? currentUser.musicalGenres
-        //     : []
+        console.log("Current user:", currentUser)
+        const currentUserGenres = Array.isArray(currentUser.musicalGenres)
+            ? currentUser.musicalGenres
+            : []
 
         // Find all users except current user
         const similarUsers = await User.aggregate([
