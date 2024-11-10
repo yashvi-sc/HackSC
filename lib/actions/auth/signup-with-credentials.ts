@@ -8,9 +8,7 @@ import { User } from "@/lib/models/auth.model"
 import { UserProvider } from "@/lib/models/types"
 import { SignUpValidation } from "@/lib/validations/auth"
 import { generateToken } from "@/lib/jwt-token"
-// import { generateVerificationToken } from "@/lib/token"
 import { sendVerificationEmail } from "@/lib/mailer"
-// import { sendVerificationEmail } from "@/lib/mail"
 
 type SignUpWithCredentialsInput = z.infer<typeof SignUpValidation>
 
@@ -21,7 +19,15 @@ export const signUpWithCredentials = async (values: SignUpWithCredentialsInput) 
     return { error: "Invalid fields!" }
   }
   
-  const { email, password, name } = validatedFields.data
+  const { 
+    email, 
+    password, 
+    name,
+    musical_genres,
+    phone_number,
+    instagram,
+    discord 
+  } = validatedFields.data
 
   await connectDB()
 
@@ -36,23 +42,20 @@ export const signUpWithCredentials = async (values: SignUpWithCredentialsInput) 
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(password, salt)
 
-  const user = new User({ name, email, password: hashedPassword })
+  const user = new User({ 
+    name, 
+    email, 
+    password: hashedPassword,
+    musicalGenres: musical_genres,
+    phoneNumber: phone_number,
+    instagramUsername: instagram,
+    discordUsername: discord
+  })
+  
   await user.save()
 
-  const verificationToken = await  generateToken({email})
-  // console.log({verificationToken})
-
-  await sendVerificationEmail(
-    email,
-    verificationToken
-  )
-
-  // const verificationToken = await generateVerificationToken(email)
-  
-  // await sendVerificationEmail(
-  //   verificationToken.email,
-  //   verificationToken.token
-  // )
+  const verificationToken = await generateToken({email})
+  await sendVerificationEmail(email, verificationToken)
   
   return { success: "Confirmation email sent!" }
 }

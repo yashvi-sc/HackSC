@@ -52,44 +52,46 @@ export const ResetForm = () => {
   }
 
   return (
-    <FormWrapper
-      headerLabel="Forgot your password?"
-      backButtonLabel="Back to sign in"
-      backButtonHref="/signin"
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={isPending}
-                      placeholder="mail@example.com"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <FormError message={error} />
-          <FormSuccess message={success} />
-          <Button
-            size="lg"
-            className="w-full mt-6"
-            type="submit"
-            disabled={isPending}
-          >
-            {isPending ? "Sending..." : "Send reset email"}
-          </Button>
-        </form>
-      </Form>
-    </FormWrapper>
-  )
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">
+      <FormWrapper
+        headerLabel="Forgot your password?"
+        backButtonLabel="Back to sign in"
+        backButtonHref="/signin"
+      >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isPending}
+                        placeholder="mail@example.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormError message={error} />
+            <FormSuccess message={success} />
+            <Button
+              size="lg"
+              className="w-full mt-6"
+              type="submit"
+              disabled={isPending}
+            >
+              {isPending ? 'Sending...' : 'Send reset email'}
+            </Button>
+          </form>
+        </Form>
+      </FormWrapper>
+    </div>
+  );
 }

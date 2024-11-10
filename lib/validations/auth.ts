@@ -13,22 +13,27 @@ export const SignInValidation = z.object({
 
 export const SignUpValidation = z
   .object({
-    name: z.string()
-      .min(1, "Username is required")
-      .max(50, "Username must be less than 50 characters"),
-    email: z.string()
-      .min(1, "Email is required")
-      .email("Invalid email"),
-    password: z.string()
-      .min(1, "Password is required")
-      .min(8, "Password must be 8+ characters"),
-    confirmPassword: z.string()
-      .min(1, "Password confirmation is required"),
+    name: z
+      .string()
+      .min(1, 'Username is required')
+      .max(50, 'Username must be less than 50 characters'),
+    email: z.string().min(1, 'Email is required').email('Invalid email'),
+    password: z
+      .string()
+      .min(1, 'Password is required')
+      .min(8, 'Password must be 8+ characters'),
+    confirmPassword: z.string().min(1, 'Password confirmation is required'),
+    musical_genres: z
+      .array(z.string())
+      .nonempty('Please add at least one genre'),
+    phone_number: z.string().min(1, 'Phone number is required'),
+    instagram: z.string().min(1, 'Instagram username is required'),
+    discord: z.string().min(1, 'Discord username is required'),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Password do not match",
-  })
+    path: ['confirmPassword'],
+    message: 'Password do not match',
+  });
 
 export const ResetPasswordValidation = z
   .object({
@@ -62,10 +67,10 @@ export const ResetPasswordValidation = z
     newPassword: z.optional(validatePassword),
     role: z.enum([UserRole.ADMIN, UserRole.USER]),
     isTwoFactorEnabled: z.optional(z.boolean()),
-    musicalGenres: z.array(z.string()).optional(),
-    phoneNumber: z.string().optional(),
-    instagramUsername: z.string().optional(),
-    discordUsername: z.string().optional(),
+    musicalGenres: z.array(z.string()).min(1, "At least one genre is required"),
+    phoneNumber: z.string().min(1, "Phone number is required"),
+    instagramUsername: z.string().min(1, "Instagram username is required"),
+    discordUsername: z.string().min(1, "Discord username is required"),
   })
   .refine((data) => {
     if (data.newPassword && !data.password) {

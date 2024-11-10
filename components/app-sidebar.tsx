@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Home, Inbox, Search, Settings, HelpCircle } from "lucide-react"
 
 import {
   Sidebar,
@@ -32,6 +32,11 @@ const items = [
     title: "Mint NFT",
     url: "/mint-nft",
     icon: Search,
+  },
+  {
+    title: "FAQ",
+    url: "/faq",
+    icon: HelpCircle,
   },
   {
     title: "Settings",

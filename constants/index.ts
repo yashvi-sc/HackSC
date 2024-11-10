@@ -1,8 +1,6 @@
 export const mainNavLinks = [
-  { title: "New Arrivals", url: "/" },
-  { title: "Best Sellers", url: "/best-sellers" },
-  { title: "Sales", url: "/" },
-  { title: "Categories", url: "/" }
+  { title: "Home", url: "/" },
+  // { title: "FAQ", url: "/faq" },
 ]
 
 export const footerLinks = [

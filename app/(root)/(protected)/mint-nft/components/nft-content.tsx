@@ -9,12 +9,12 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
 import { mintNFT } from '@/lib/solana/nft'
+import { BiRepost } from 'react-icons/bi';
 
 interface NFTFormData {
   title: string
   songUrl: string
   price: number
-  listDate: Date
 }
 
 export function NFTContent() {
@@ -24,38 +24,45 @@ export function NFTContent() {
   const [formData, setFormData] = useState<NFTFormData>({
     title: '',
     songUrl: '',
-    price: 0,
-    listDate: new Date()
+    price: 0
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!connected) return
+    if (!connected || !publicKey) return
 
     try {
       setIsLoading(true)
-      const signature = await mintNFT(wallet, {
-        ...formData,
-        creator: publicKey?.toBase58() || '',
+      const signature = await mintNFT({
+        publicKey,
+        connected,
+        ...wallet
+      }, {
+        walletAddress: publicKey.toBase58(),
+        title: formData.title,
+        songUrl: formData.songUrl,
+        price: formData.price,
+        creator: publicKey.toBase58(),
         createdAt: new Date()
       })
 
       toast({
-        title: 'NFT Minted Successfully!',
-        description: `Transaction signature: ${signature}`,
+        variant: 'success',
+        title: 'Success!',
+        description: `NFT minted successfully.`,
+        status: 'success'
       })
 
       // Reset form
       setFormData({
         title: '',
         songUrl: '',
-        price: 0,
-        listDate: new Date()
+        price: 0
       })
     } catch (error) {
       toast({
-        title: 'Error Minting NFT',
-        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to mint NFT',
         variant: 'destructive'
       })
     } finally {
@@ -65,25 +72,27 @@ export function NFTContent() {
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <h1 className="text-3xl font-bold">Mint Your Song NFT</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Mint Your Song NFT</h1>
+        <WalletMultiButton className="!bg-primary hover:!bg-primary/90" />
+      </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="px-4 mt-2 text-xl">Connect Wallet</CardTitle>
+          <CardTitle className="text-xl px-4 mt-2">NFT Details</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="mb-6">
-            <WalletMultiButton className="!bg-primary hover:!bg-primary/90" />
-          </div>
-
           {connected ? (
-            <form onSubmit={handleSubmit} className="space-y-4 mb-3">
+            <form onSubmit={handleSubmit} className="space-y-4 mb-2">
               <div>
                 <Label htmlFor="title">Song Title</Label>
                 <Input
                   id="title"
+                  placeholder="Enter song title"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -92,8 +101,11 @@ export function NFTContent() {
                 <Label htmlFor="songUrl">Song URL</Label>
                 <Input
                   id="songUrl"
+                  placeholder="Enter song URL (e.g., IPFS)"
                   value={formData.songUrl}
-                  onChange={(e) => setFormData({ ...formData, songUrl: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, songUrl: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -105,23 +117,32 @@ export function NFTContent() {
                   type="number"
                   min="0"
                   step="0.01"
+                  placeholder="Enter price in SOL"
                   value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      price: parseFloat(e.target.value),
+                    })
+                  }
                   required
                 />
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Minting NFT...' : 'Mint NFT'}
+                <BiRepost />
+                {isLoading ? 'Minting...' : 'Mint NFT'}
               </Button>
             </form>
           ) : (
-            <p className="text-center text-muted-foreground">
-              Please connect your wallet to mint NFTs
-            </p>
+            <div className="text-center py-4">
+              <p className="text-muted-foreground mb-4">
+                Please connect your wallet to mint NFTs
+              </p>
+            </div>
           )}
         </CardContent>
       </Card>
     </div>
-  )
+  );
 } 

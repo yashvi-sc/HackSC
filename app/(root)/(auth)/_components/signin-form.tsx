@@ -72,97 +72,99 @@ export const SignInForm = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">
-    <FormWrapper
-      headerLabel="Welcome back"
-      backButtonLabel="Don't have an account?"
-      backButtonHref="/signup"
-      showSocial
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-          <div className="space-y-4">
-            {showTwoFactor && (
-              <FormField
-                control={form.control}
-                name="code"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Two Factor Code</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isPending}
-                        placeholder="123456"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-            {!showTwoFactor && (
-            <>
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isPending}
-                        placeholder="mail@example.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isPending}
-                        type="password"
-                        placeholder="your password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <Button
-                      size="sm"
-                      variant="link"
-                      asChild
-                      className="px-0 font-normal"
-                    >
-                      <Link href="/reset">
-                        Forgot password?
-                      </Link>
-                    </Button>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </>
-          )}
-          </div>
-          <FormError message={error} />
-          <FormSuccess message={success} />
-          <Button
-            size="lg"
-            className="w-full mt-6"
-            type="submit"
-            disabled={isPending}
-          >
-            {isPending ? "Submitting..." : showTwoFactor ? "Confirm" : "Sign In"}
-          </Button>
-        </form>
-      </Form>
+      <FormWrapper
+        headerLabel="Welcome Back"
+        backButtonLabel="Don't have an account?"
+        backButtonHref="/signup"
+        showSocial
+      >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+            <div className="space-y-4">
+              {showTwoFactor && (
+                <FormField
+                  control={form.control}
+                  name="code"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Two Factor Code</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={isPending}
+                          placeholder="123456"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {!showTwoFactor && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isPending}
+                            placeholder="mail@example.com"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isPending}
+                            type="password"
+                            placeholder="your password"
+                            {...field}
+                          />
+                        </FormControl>
+                        <Button
+                          size="sm"
+                          variant="link"
+                          asChild
+                          className="px-0 font-normal"
+                        >
+                          <Link href="/reset">Forgot password?</Link>
+                        </Button>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
+            </div>
+            <FormError message={error} />
+            <FormSuccess message={success} />
+            <Button
+              size="lg"
+              className="w-full mt-6"
+              type="submit"
+              disabled={isPending}
+            >
+              {isPending
+                ? 'Submitting...'
+                : showTwoFactor
+                ? 'Confirm'
+                : 'Sign In'}
+            </Button>
+          </form>
+        </Form>
       </FormWrapper>
     </div>
-  )
+  );
 }

@@ -8,6 +8,7 @@ import { AppSidebar } from '@/components/app-sidebar';
 import ThemeProvider from '@/providers/theme-provider';
 import { Navbar } from '@/components/shared/navbar';
 import { Toaster } from '@/components/ui/toaster';
+import { Footer } from '@/components/shared/footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -61,6 +62,7 @@ export default async function RootLayout({
                 </SidebarProvider>
               ) : (
                 <main
+                  className="w-full mx-auto overflow-y-hidden "
                   style={{
                     backgroundImage: 'url(/bg.jpg)',
                     backgroundRepeat: 'no-repeat',
@@ -72,6 +74,7 @@ export default async function RootLayout({
                 </main>
               )}
             </div>
+            <Footer />
             <Toaster />
           </ThemeProvider>
         </body>
