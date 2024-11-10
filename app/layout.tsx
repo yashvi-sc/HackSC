@@ -27,6 +27,15 @@ export default async function RootLayout({
     <SessionProvider session={session}>
       <html suppressHydrationWarning lang="en">
         <body className={inter.className}>
+          <div
+            className="absolute inset-0 -z-10 h-full w-full"
+            style={{
+              backgroundImage: 'url(/bg.jpg)',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'top center',
+              backgroundSize: 'cover',
+            }}
+          />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -38,12 +47,29 @@ export default async function RootLayout({
               {session ? (
                 <SidebarProvider>
                   <AppSidebar />
-                  <main className="w-full mx-auto overflow-y-hidden">
+                  <main
+                    className="w-full mx-auto overflow-y-hidden "
+                    style={{
+                      backgroundImage: 'url(/bg.jpg)',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'top center',
+                      backgroundSize: 'cover',
+                    }}
+                  >
                     {children}
                   </main>
                 </SidebarProvider>
               ) : (
-                <main>{children}</main>
+                <main
+                  style={{
+                    backgroundImage: 'url(/bg.jpg)',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'top center',
+                    backgroundSize: 'cover',
+                  }}
+                >
+                  {children}
+                </main>
               )}
             </div>
             <Toaster />

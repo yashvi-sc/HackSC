@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 p-4">
+    <div className="w-full flex flex-col items-center justify-center min-h-screen p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <Link href="/login">
           <Card className="transition-transform duration-300 transform hover:scale-105 shadow-lg">

@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { useToast } from '@/components/ui/use-toast'
+import { mintNFT } from '@/lib/solana/nft'
 
 interface NFTFormData {
   title: string
@@ -16,7 +18,9 @@ interface NFTFormData {
 }
 
 export function NFTContent() {
-  const { connected } = useWallet()
+  const { connected, publicKey, ...wallet } = useWallet()
+  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState<NFTFormData>({
     title: '',
     songUrl: '',
@@ -29,9 +33,33 @@ export function NFTContent() {
     if (!connected) return
 
     try {
-      console.log('Minting NFT with data:', formData)
+      setIsLoading(true)
+      const signature = await mintNFT(wallet, {
+        ...formData,
+        creator: publicKey?.toBase58() || '',
+        createdAt: new Date()
+      })
+
+      toast({
+        title: 'NFT Minted Successfully!',
+        description: `Transaction signature: ${signature}`,
+      })
+
+      // Reset form
+      setFormData({
+        title: '',
+        songUrl: '',
+        price: 0,
+        listDate: new Date()
+      })
     } catch (error) {
-      console.error('Error minting NFT:', error)
+      toast({
+        title: 'Error Minting NFT',
+        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        variant: 'destructive'
+      })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -41,7 +69,7 @@ export function NFTContent() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Connect Wallet & Create NFT</CardTitle>
+          <CardTitle className="px-4 mt-2 text-xl">Connect Wallet</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="mb-6">
@@ -49,8 +77,8 @@ export function NFTContent() {
           </div>
 
           {connected ? (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
+            <form onSubmit={handleSubmit} className="space-y-4 mb-3">
+              <div>
                 <Label htmlFor="title">Song Title</Label>
                 <Input
                   id="title"
@@ -60,7 +88,7 @@ export function NFTContent() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="songUrl">Song URL</Label>
                 <Input
                   id="songUrl"
@@ -70,7 +98,7 @@ export function NFTContent() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="price">Price (SOL)</Label>
                 <Input
                   id="price"
@@ -83,8 +111,8 @@ export function NFTContent() {
                 />
               </div>
 
-              <Button type="submit" className="w-full">
-                Mint NFT
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? 'Minting NFT...' : 'Mint NFT'}
               </Button>
             </form>
           ) : (

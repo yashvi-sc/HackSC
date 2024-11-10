@@ -73,8 +73,10 @@ export default function TeamMatchingPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Similar Music Enthusiasts</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-xl font-bold px-6 mt-2">
+            Similar Music Enthusiasts
+          </CardTitle>
+          <CardDescription className="px-6">
             Users who share your musical interests
           </CardDescription>
         </CardHeader>
@@ -82,7 +84,7 @@ export default function TeamMatchingPage() {
           <ScrollArea className="h-[600px] pr-4">
             {isLoading ? (
               <div className="space-y-4">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(6)].map((_, i) => (
                   <UserSkeleton key={i} />
                 ))}
               </div>
