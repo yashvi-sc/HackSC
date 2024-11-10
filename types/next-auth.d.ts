@@ -1,16 +1,38 @@
 import { UserRole } from "@/lib/models/types"
-import NextAuth, {type DefaultSession, type User as NextAuthUser } from "next-auth"
-
-export interface ExtendedUser extends NextAuthUser {
-  _id: string,
-  role: UserRole,
-  provider: string
-  isTwoFactorEnabled: boolean
-}
 
 declare module "next-auth" {
-  interface User extends Partial<ExtendedUser> {}
+  interface User {
+    _id: string
+    role: UserRole
+    provider?: string
+    isTwoFactorEnabled: boolean
+    musicalGenres?: string[]
+    phoneNumber?: string
+    instagramUsername?: string
+    discordUsername?: string
+  }
+
   interface Session {
-    user: ExtendedUser & DefaultSession["user"]
+    user: User & {
+      _id: string
+      role: UserRole
+      provider?: string
+      isTwoFactorEnabled: boolean
+      musicalGenres?: string[]
+      phoneNumber?: string
+      instagramUsername?: string
+      discordUsername?: string
+    }
+  }
+
+  interface JWT {
+    _id: string
+    role: UserRole
+    provider?: string
+    isTwoFactorEnabled: boolean
+    musicalGenres?: string[]
+    phoneNumber?: string
+    instagramUsername?: string
+    discordUsername?: string
   }
 }

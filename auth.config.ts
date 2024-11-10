@@ -74,25 +74,26 @@ export default {
       return true
     },
     async jwt({ token }) {
-      // console.log({token})
       if (!token.email) return token
 
       const existingUser = await fetchUserByEmail(token.email)
 
       if (!existingUser) return token
 
-      // console.log({existingUser})
       token._id = existingUser._id
       token.name = existingUser.name
       token.email = existingUser.email
       token.role = existingUser.role
       token.provider = existingUser.provider
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled
+      token.musicalGenres = existingUser.musicalGenres
+      token.phoneNumber = existingUser.phoneNumber
+      token.instagramUsername = existingUser.instagramUsername
+      token.discordUsername = existingUser.discordUsername
       
       return token
     },
     async session({ session, token }) {
-      // console.log({session, token})
       if (token._id && session.user) {
         session.user._id = token._id as string
         session.user.name = token.name as string
@@ -100,6 +101,10 @@ export default {
         session.user.role = token.role as UserRole
         session.user.provider = token.provider as string
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean
+        session.user.musicalGenres = token.musicalGenres as string[]
+        session.user.phoneNumber = token.phoneNumber as string
+        session.user.instagramUsername = token.instagramUsername as string
+        session.user.discordUsername = token.discordUsername as string
       }
 
       return session

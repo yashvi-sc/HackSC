@@ -1,6 +1,6 @@
 export const mainNavLinks = [
   { title: "New Arrivals", url: "/" },
-  { title: "Best Sellers", url: "/" },
+  { title: "Best Sellers", url: "/best-sellers" },
   { title: "Sales", url: "/" },
   { title: "Categories", url: "/" }
 ]

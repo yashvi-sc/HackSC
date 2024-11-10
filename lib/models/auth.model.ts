@@ -1,45 +1,55 @@
 import mongoose from "mongoose"
 import { UserRole, UserProvider } from "@/lib/models/types"
 
-export const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
+const userSchema = new mongoose.Schema({
+  name: String,
   email: {
     type: String,
-    unique: true,
-    required: true
+    unique: true
   },
-  password: {
-    type: String
-  },
-  image: {
-    type: String
-  },
+  emailVerified: Date,
+  emailPendingVerification: String,
+  image: String,
+  password: String,
   role: {
     type: String,
-    enum: [UserRole.USER, UserRole.ADMIN],
+    enum: Object.values(UserRole),
     default: UserRole.USER
   },
   provider: {
     type: String,
-    enum: [UserProvider.CREDENTIALS, UserProvider.GOOGLE],
+    enum: Object.values(UserProvider),
     default: UserProvider.CREDENTIALS
-  },
-  emailVerified: {
-    type: Date
   },
   isTwoFactorEnabled: {
     type: Boolean,
     default: false
   },
-  emailPendingVerification: {
+  musicalGenres: {
+    type: [String],
+    required: true,
+    default: []
+  },
+  phoneNumber: {
     type: String,
+    required: true,
+    default: ""
+  },
+  instagramUsername: {
+    type: String,
+    required: true,
+    default: ""
+  },
+  discordUsername: {
+    type: String,
+    required: true,
+    default: ""
   }
-}, { timestamps: true })
+}, {
+  timestamps: true
+})
 
-const User = mongoose.models?.User || mongoose.model("User", userSchema)
+export const User = mongoose.models.User || mongoose.model("User", userSchema)
 
 const verificationTokenSchema = new mongoose.Schema({
   email: {
@@ -110,4 +120,4 @@ export const twoFactorConfirmationSchema = new mongoose.Schema({
 const TwoFactorConfirmation = mongoose.models?.TwoFactorConfirmation || mongoose.model("TwoFactorConfirmation", twoFactorConfirmationSchema)
 
 
-export { User, VerificationToken, PasswordResetToken, TwoFactorToken, TwoFactorConfirmation }
+export { VerificationToken, PasswordResetToken, TwoFactorToken, TwoFactorConfirmation }

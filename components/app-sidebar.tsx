@@ -15,27 +15,27 @@ import {
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
     title: "Generate Songs",
-    url: "#",
+    url: "/generate-songs",
     icon: Inbox,
   },
   {
     title: "Team Matching",
-    url: "#",
+    url: "/team-matching",
     icon: Calendar,
   },
   {
     title: "Generate NFT",
-    url: "#",
+    url: "/generate-nft",
     icon: Search,
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/settings",
     icon: Settings,
   },
   

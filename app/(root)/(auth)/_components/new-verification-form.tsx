@@ -41,7 +41,8 @@ export const NewVerificationForm = () => {
   }, [onSubmit])
 
   return (
-    <FormWrapper
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">
+      <FormWrapper
       headerLabel="Confirming your verification"
       backButtonLabel="Back to login"
       backButtonHref="/signin"
@@ -54,7 +55,8 @@ export const NewVerificationForm = () => {
         {!success && (
           <FormError message={error} />
         )}
-      </div>
-    </FormWrapper>
+        </div>
+      </FormWrapper>
+    </div>
   )
 }

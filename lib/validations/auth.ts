@@ -61,7 +61,11 @@ export const ResetPasswordValidation = z
     password: z.optional(validatePassword),
     newPassword: z.optional(validatePassword),
     role: z.enum([UserRole.ADMIN, UserRole.USER]),
-    isTwoFactorEnabled: z.optional(z.boolean())
+    isTwoFactorEnabled: z.optional(z.boolean()),
+    musicalGenres: z.array(z.string()).optional(),
+    phoneNumber: z.string().optional(),
+    instagramUsername: z.string().optional(),
+    discordUsername: z.string().optional(),
   })
   .refine((data) => {
     if (data.newPassword && !data.password) {
