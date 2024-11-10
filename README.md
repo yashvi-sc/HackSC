@@ -20,26 +20,31 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 Create a .env file in the root directory and add the following variables:
 
 ```env
+# App URL
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-AUTH_SECRET="YOUR_AUTH_SECRET"
+# Authentication
+AUTH_SECRET="your_auth_secret_here" # Generate with: openssl rand -hex 32
+TOKEN_SECRET="your_token_secret_here" # Generate with: openssl rand -hex 32
 
-MONGODB_URI="YOUR_MONGODB_URI"
+# MongoDB
+MONGODB_URI="mongodb+srv://username:password@cluster.mongodb.net/database"
 
-GOOGLE_CLIENT_ID="YOUR_GOOGLE_CLIENT_ID"
-GOOGLE_CLIENT_SECRET="YOUR_GOOGLE_CLIENT_SECRET"
+# Google OAuth
+GOOGLE_CLIENT_ID="your_google_client_id"
+GOOGLE_CLIENT_SECRET="your_google_client_secret"
 
-TOKEN_SECRET="YOUR_TOKEN_SECRET"
+# Email Service (Resend)
+RESEND_API_KEY="re_xxxxxxxxxxxx"
+RESEND_EMAIL_URL="https://api.resend.com/emails"
 
-# Resend
-RESEND_API_KEY="YOUR_RESEND_API_KEY"
-RESEND_EMAIL_URL="YOUR_RESEND_EMAIL_URL"
+# SMTP Settings (Gmail)
+EMAIL_USER="your_email@gmail.com"
+EMAIL_PASSWORD="your_app_specific_password"
 
-# OR
-
-# Nodemailer
-EMAIL_USER="YOUR_EMAIL_USER"
-EMAIL_PASSWORD="YOUR_EMAIL_PASSWORD"
+# Web3 Settings
+NEXT_PUBLIC_NFT_STORAGE_KEY="your_nft_storage_key"
+NEXT_PUBLIC_SOLANA_RPC_URL="https://api.devnet.solana.com"
 ```
 
 GOOGLE_CLIENT_ID & GOOGLE_CLIENT_SECRET
