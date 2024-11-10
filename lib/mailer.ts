@@ -5,8 +5,25 @@ const emailUser = process.env.EMAIL_USER
 const emailPass = process.env.EMAIL_PASSWORD
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: { user: emailUser, pass: emailPass }
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: emailUser,
+    pass: emailPass
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+})
+
+// Verify connection configuration
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log("SMTP connection error:", error)
+  } else {
+    console.log("Server is ready to take our messages")
+  }
 })
 
 export const sendVerificationEmail = async (
@@ -16,7 +33,7 @@ export const sendVerificationEmail = async (
   const confirmLink = `${baseURL}/new-verification?token=${token}`
 
   const mailOptions = {
-    from: emailUser,
+    from: `"Auth Service" <${emailUser}>`,
     to: email,
     subject: "Confirm your email",
     html: `<p>Click <a href="${confirmLink}">here</a> to confirm email.</p>`
@@ -32,7 +49,7 @@ export const sendPasswordResetEmail = async (
   const resetLink = `${baseURL}/new-password?token=${token}`
 
   const mailOptions = {
-    from: emailUser,
+    from: `"Auth Service" <${emailUser}>`,
     to: email,
     subject: "Reset your password",
     html: `<p>Click <a href="${resetLink}">here</a> to reset password.</p>`
@@ -46,10 +63,10 @@ export const sendTwoFactorTokenEmail = async (
   token: string
 ) => {
   const mailOptions = {
-    from: emailUser,
+    from: `"Auth Service" <${emailUser}>`,
     to: email,
     subject: "2FA Code",
-    html: `<p>Your 2FA code: ${token}.</p>`
+    html: `<p>Your 2FA code: ${token}</p>`
   }
 
   await transporter.sendMail(mailOptions)

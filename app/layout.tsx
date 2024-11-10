@@ -3,7 +3,8 @@ import { Inter } from "next/font/google"
 import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/auth'
 import "./globals.css"
-
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 import ThemeProvider from "@/providers/theme-provider"
 import { Navbar } from "@/components/shared/navbar"
 import { Footer } from "@/components/shared/footer"
@@ -34,9 +35,27 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            <main className="flex h-full flex-col items-center justify-center">
+            
+            
+            {session ? (
+                <>
+                <SidebarProvider>
+                  <AppSidebar />
+                  <main className="flex h-full flex-col items-center justify-center">
+              
+              <SidebarTrigger />
+              
               {children}
-            </main>
+              </main>
+              </SidebarProvider>
+                  
+                </>
+              ) : null}
+             
+          
+           <main >
+           {children}
+           </main>
             <Footer />
             <Toaster />
           </ThemeProvider>

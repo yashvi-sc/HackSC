@@ -40,27 +40,34 @@ export const SignInForm = () => {
   })
 
   async function onSubmit(values: z.infer<typeof SignInValidation>) {
-    // console.log(values)
     setError("")
     setSuccess("")
 
-    startTransition(() => {
-      signInWithCredentials(values, callbackUrl)
-        .then((data) => {
-          if (data?.error) {
-            setError(data.error)
-          } else if (data?.success) {
-            setSuccess(data.success)
-          } else if (data?.url) {
-            window.location.assign(data?.url)
-          }
+    try {
+      startTransition(() => {
+        signInWithCredentials(values, callbackUrl)
+          .then((data) => {
+            if (data?.error) {
+              setError(data.error)
+            } else if (data?.success) {
+              setSuccess(data.success)
+            } else if (data?.url) {
+              window.location.assign(data?.url)
+            }
 
-          if (data?.twoFactor) {
-            setShowTwoFactor(true)
-          }
-        })
-        .catch(() => setError("Something went wrong"))
-    })
+            if (data?.twoFactor) {
+              setShowTwoFactor(true)
+            }
+          })
+          .catch((err) => {
+            console.error("Sign in error:", err)
+            setError("Something went wrong during sign in")
+          })
+      })
+    } catch (err) {
+      console.error("Form submission error:", err)
+      setError("An unexpected error occurred")
+    }
   }
 
   return (
