@@ -48,8 +48,8 @@ export default function GenerateSongs() {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50 ">
-      <main className="mx-auto">
+    <div className="min-h-screen p-8 w-full mt-16">
+      <main className="mx-auto max-w-4xl">
         <h1 className="text-3xl font-bold text-center mb-8">
           How are you feeling today? Let&apos;s find the song that understands
           you❤️

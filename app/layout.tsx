@@ -38,18 +38,14 @@ export default async function RootLayout({
             <div className="min-h-screen pt-16">
               {session ? (
                 <SidebarProvider>
-                  <div className="flex">
-                    <AppSidebar />
-                    <main className="">
-                      <SidebarTrigger />
-                      {children}
-                    </main>
-                  </div>
+                  <AppSidebar />
+                  <main className="w-full mx-auto overflow-y-hidden">
+                    {/* <SidebarTrigger /> */}
+                    {children}
+                  </main>
                 </SidebarProvider>
               ) : (
-                <main className="">
-                  {children}
-                </main>
+                <main>{children}</main>
               )}
             </div>
             <Toaster />

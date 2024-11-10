@@ -1,11 +1,13 @@
-import { SettingsForm } from "../_components/settings-form"
+import { SettingsForm } from '../_components/settings-form';
 
-const SettingsPage = async() => {
+const SettingsPage = async () => {
   return (
     <section className="w-full">
-      <SettingsForm />
+      <div className="flex flex-col items-center justify-center">
+        <SettingsForm />
+      </div>
     </section>
-  )
-}
+  );
+};
 
-export default SettingsPage
+export default SettingsPage;

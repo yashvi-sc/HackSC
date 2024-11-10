@@ -35,7 +35,7 @@ export default function TeamMatchingPage() {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `/api/users/similar?userId=${session?.user?._id}`
+          `/api/user/similar?userId=${session?.user?._id}`
         );
         setUsers(response.data);
       } catch (err) {
