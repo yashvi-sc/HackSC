@@ -11,78 +11,92 @@ export async function GET(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    const { searchParams } = new URL(req.url)
-    const userId = searchParams.get("userId")
-
-    if (!userId) {
-      return new NextResponse("User ID is required", { status: 400 })
-    }
+    console.log("Current user ID:", session.user._id)
 
     await connectDB()
+    const userObjectId = new ObjectId(session.user._id)
 
-    // Convert string ID to ObjectId
-    const userObjectId = new ObjectId(userId)
-
-    // Log the current user lookup
-    console.log("Looking for user with ID:", userId)
-
-    // Get the current user's genres
+    // Get current user
     const currentUser = await User.findById(userObjectId)
-    
-    console.log("Current user:", currentUser)
-
     if (!currentUser) {
       return new NextResponse("User not found", { status: 404 })
     }
 
-    // Log the genres we're matching against
-    console.log("Matching genres:", currentUser.musicalGenres)
-
-    // Find users with similar genres using aggregation for better matching
+    // Find all users except current user
     const similarUsers = await User.aggregate([
       // Exclude current user
-      { 
-        $match: { 
-          _id: { $ne: userObjectId },
-          musicalGenres: { $exists: true, $ne: [] }
-        } 
-      },
-      
-      // Calculate similarity score
       {
-        $addFields: {
-          commonGenres: {
-            $size: {
-              $setIntersection: ["$musicalGenres", currentUser.musicalGenres]
-            }
-          }
-        }
+        $match: {
+          _id: { $ne: userObjectId },
+          musicalGenres: { $ifNull: ['$musicalGenres', []] },
+        },
       },
-      
-      // Only include users with at least one common genre
-      { $match: { commonGenres: { $gt: 0 } } },
-      
-      // Sort by number of common genres
-      { $sort: { commonGenres: -1 } },
-      
-      // Limit results
-      { $limit: 20 },
-      
-      // Project only needed fields
+
+      // Add fields for matching (even if not used for filtering)
+      // {
+      //   $addFields: {
+      //     matchingGenres: {
+      //       $setIntersection: [
+      //         { $ifNull: ["$musicalGenres", []] },
+      //         { $ifNull: [currentUser.musicalGenres, []] }
+      //       ]
+      //     },
+      //     totalGenres: {
+      //       $size: { $ifNull: ["$musicalGenres", []] }
+      //     }
+      //   }
+      // },
+
+      // Calculate match score (optional for testing)
+      // {
+      //   $addFields: {
+      //     matchScore: {
+      //       $multiply: [
+      //         {
+      //           $divide: [
+      //             { $size: "$matchingGenres" },
+      //             { $add: ["$totalGenres", 0.1] }
+      //           ]
+      //         },
+      //         100
+      //       ]
+      //     }
+      //   }
+      // },
+
+      // Sort by name for consistent ordering
+      {
+        $sort: {
+          name: 1,
+        },
+      },
+
+      // Project needed fields
       {
         $project: {
           _id: 1,
           name: 1,
-          musicalGenres: 1,
+          musicalGenres: { $ifNull: ['$musicalGenres', []] },
+          // matchingGenres: 1,
+          // matchScore: 1,
           instagramUsername: 1,
           discordUsername: 1,
-          commonGenres: 1
-        }
-      }
-    ])
+          phoneNumber: 1,
+          email: 1, // Added for testing
+        },
+      },
+    ]);
 
-    // Log the results
-    console.log("Found similar users:", similarUsers.length)
+    console.log(`Found ${similarUsers.length} users`)
+
+    // Log some sample data for debugging
+    if (similarUsers.length > 0) {
+      console.log("Sample user:", {
+        name: similarUsers[0].name,
+        genres: similarUsers[0].musicalGenres,
+        matchingGenres: similarUsers[0].matchingGenres
+      })
+    }
 
     return NextResponse.json(similarUsers)
   } catch (error) {

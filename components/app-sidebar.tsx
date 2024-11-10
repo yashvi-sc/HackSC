@@ -24,8 +24,8 @@ const items = [
     icon: Inbox,
   },
   {
-    title: "Team Matching",
-    url: "/team-matching",
+    title: "Matching",
+    url: "/matching",
     icon: Calendar,
   },
   {
