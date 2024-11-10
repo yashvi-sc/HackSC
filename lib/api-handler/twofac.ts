@@ -1,28 +1,28 @@
-import { fetcher } from "@/lib/utils"
+import {fetcher} from "@/lib/utils"
 
 export const fetchConfirmationByUserId = async (
-  userId: string
+    userId: string
 ) => {
-  try {
-    const twoFactorConfirmation = await fetcher(`${process.env.NEXT_PUBLIC_APP_URL}/api/twofac/fetch-by-userId`, {
-      method: "POST",
-      body: JSON.stringify({userId})
-    })
-    // console.log({twoFactorConfirmation})
-    
-    if (twoFactorConfirmation) return twoFactorConfirmation
+    try {
+        const twoFactorConfirmation = await fetcher(`${process.env.NEXT_PUBLIC_APP_URL}/api/twofac/fetch-by-userId`, {
+            method: "POST",
+            body: JSON.stringify({userId})
+        })
+        // console.log({twoFactorConfirmation})
 
-    return null
-  } catch {
-    return null
-  }
+        if (twoFactorConfirmation) return twoFactorConfirmation
+
+        return null
+    } catch {
+        return null
+    }
 }
 
 export const deleteConfirmationById = async (
-  id: string
+    id: string
 ) => {
-  await fetcher(`${process.env.NEXT_PUBLIC_APP_URL}/api/twofac/delete-by-id`, {
-    method: "DELETE",
-    body: JSON.stringify({id})
-  })
+    await fetcher(`${process.env.NEXT_PUBLIC_APP_URL}/api/twofac/delete-by-id`, {
+        method: "DELETE",
+        body: JSON.stringify({id})
+    })
 }

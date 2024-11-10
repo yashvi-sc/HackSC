@@ -1,4 +1,4 @@
-import { Connection, clusterApiUrl } from '@solana/web3.js'
+import {Connection} from '@solana/web3.js'
 
 // Use devnet for testing
 export const SOLANA_NETWORK = 'devnet'

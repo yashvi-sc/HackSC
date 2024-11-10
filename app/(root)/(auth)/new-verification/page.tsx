@@ -1,11 +1,11 @@
-import { NewVerificationForm } from "../_components/new-verification-form"
+import {NewVerificationForm} from "../_components/new-verification-form"
 
 const NewVerificationPage = () => {
-  return (
-    <section className="w-full">
-      <NewVerificationForm />
-    </section>
-   )
+    return (
+        <section className="w-full">
+            <NewVerificationForm/>
+        </section>
+    )
 }
- 
+
 export default NewVerificationPage

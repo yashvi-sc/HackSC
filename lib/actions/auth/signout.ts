@@ -1,10 +1,9 @@
 "use server"
 
-import { signOut } from "@/auth"
-import { routes } from "@/routes"
+import {signOut} from "@/auth"
 
 export const logout = async () => {
-  await signOut({
-    redirect: false
-  })
+    await signOut({
+        redirect: false
+    })
 }
