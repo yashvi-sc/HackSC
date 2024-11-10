@@ -3,11 +3,10 @@ import { Inter } from 'next/font/google';
 import { SessionProvider } from 'next-auth/react';
 import { auth } from '@/auth';
 import './globals.css';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import ThemeProvider from '@/providers/theme-provider';
 import { Navbar } from '@/components/shared/navbar';
-import { Footer } from '@/components/shared/footer';
 import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -40,7 +39,6 @@ export default async function RootLayout({
                 <SidebarProvider>
                   <AppSidebar />
                   <main className="w-full mx-auto overflow-y-hidden">
-                    {/* <SidebarTrigger /> */}
                     {children}
                   </main>
                 </SidebarProvider>

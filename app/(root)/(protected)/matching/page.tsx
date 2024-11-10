@@ -20,6 +20,7 @@ interface User {
   _id: string;
   name: string;
   musicalGenres: string[];
+  matchScore: number;
   instagramUsername?: string;
   discordUsername?: string;
 }
@@ -37,7 +38,7 @@ export default function TeamMatchingPage() {
         const response = await axios.get(
           `/api/user/similar?userId=${session?.user?._id}`
         );
-        setUsers(response.data);
+        setUsers(response.data.users.matching);
       } catch (err) {
         setError('Failed to load similar users');
       } finally {
@@ -111,14 +112,31 @@ function UserCard({ user }: { user: User }) {
           <UserCircle className="h-12 w-12 text-muted-foreground" />
           <div className="flex-1 space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold">{user.name}</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold">{user.name}</h3>
+              </div>
               <div className="flex gap-2">
                 {user.instagramUsername && (
-                  <Badge variant="outline">Instagram</Badge>
+                  <Badge 
+                    variant="outline" 
+                    className="cursor-pointer hover:bg-pink-100"
+                    onClick={() => window.open(`https://instagram.com/${user.instagramUsername}`, '_blank')}
+                  >
+                    Instagram
+                  </Badge>
                 )}
                 {user.discordUsername && (
-                  <Badge variant="outline">Discord</Badge>
+                  <Badge 
+                    variant="outline"
+                    className="cursor-pointer hover:bg-indigo-100"
+                    onClick={() => window.open(`https://discord.com/users/${user.discordUsername}`, '_blank')}
+                  >
+                    Discord
+                  </Badge>
                 )}
+                <Badge variant="default">
+                  {Math.round(user.matchScore)}% match
+                </Badge>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">

@@ -29,8 +29,8 @@ const items = [
     icon: Calendar,
   },
   {
-    title: "Generate NFT",
-    url: "/generate-nft",
+    title: "Mint NFT",
+    url: "/mint-nft",
     icon: Search,
   },
   {

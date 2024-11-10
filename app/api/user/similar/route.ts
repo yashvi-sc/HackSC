@@ -17,78 +17,130 @@ export async function GET(req: Request) {
       return new NextResponse("User ID is required", { status: 400 })
     }
 
-    console.log("Current user ID:", userId)
-
     await connectDB()
     const userObjectId = new ObjectId(userId)
 
     // Get current user
     const currentUser = await User.findById(userObjectId)
+      .select('name email musicalGenres')
+      .lean()
+
     if (!currentUser) {
       return new NextResponse("User not found", { status: 404 })
     }
+
     console.log("Current user:", currentUser)
+    const currentUserGenres = Array.isArray(currentUser.musicalGenres) 
+      ? currentUser.musicalGenres 
+      : []
 
     // Find all users except current user
     const similarUsers = await User.aggregate([
       // Exclude current user
       {
         $match: {
-          _id: { $ne: userObjectId },
-          musicalGenres: { $ifNull: ['$musicalGenres', []] },
-        },
+          _id: { $ne: userObjectId }
+        }
       },
 
-      // Add fields for matching (even if not used for filtering)
+      // Add fields for matching
       {
         $addFields: {
-          matchingGenres: {
-            $setIntersection: [
-              { $ifNull: ["$musicalGenres", []] },
-              { $ifNull: [currentUser.musicalGenres, []] }
-            ]
-          },
-          totalGenres: {
-            $size: { $ifNull: ["$musicalGenres", []] }
+          safeGenres: {
+            $cond: {
+              if: { $isArray: "$musicalGenres" },
+              then: "$musicalGenres",
+              else: []
+            }
           }
         }
       },
 
-      // Sort by name for consistent ordering
+      // Calculate matching genres and counts
       {
-        $sort: {
-          name: 1,
-        },
+        $addFields: {
+          matchingGenres: {
+            $setIntersection: ["$safeGenres", currentUserGenres]
+          },
+          totalGenres: { $size: "$safeGenres" }
+        }
       },
 
-      // Project needed fields
+      // Calculate match metrics
+      {
+        $addFields: {
+          matchCount: { $size: "$matchingGenres" },
+          matchScore: {
+            $cond: {
+              if: { $eq: ["$totalGenres", 0] },
+              then: 0,
+              else: {
+                $multiply: [
+                  {
+                    $divide: [
+                      { $size: "$matchingGenres" },
+                      "$totalGenres"
+                    ]
+                  },
+                  100
+                ]
+              }
+            }
+          }
+        }
+      },
+
+      // Sort by match count and score
+      {
+        $sort: {
+          matchCount: -1,
+          matchScore: -1,
+          name: 1
+        }
+      },
+
+      // Project final fields
       {
         $project: {
           _id: 1,
           name: 1,
-          musicalGenres: { $ifNull: ['$musicalGenres', []] },
-          // matchingGenres: 1,
-          // matchScore: 1,
+          musicalGenres: "$safeGenres",
+          matchingGenres: 1,
+          matchCount: 1,
+          matchScore: 1,
           instagramUsername: 1,
           discordUsername: 1,
           phoneNumber: 1,
-          email: 1, // Added for testing
-        },
-      },
-    ]);
+          email: 1
+        }
+      }
+    ])
 
-    console.log(`Found ${similarUsers.length} users`)
-
-    // Log some sample data for debugging
-    if (similarUsers.length > 0) {
-      console.log("Sample user:", {
-        name: similarUsers[0].name,
-        genres: similarUsers[0].musicalGenres,
-        matchingGenres: similarUsers[0].matchingGenres
-      })
+    // Organize users by match status
+    const organizedUsers = {
+      matching: similarUsers.filter(user => user.matchCount > 0),
+      noMatches: similarUsers.filter(user => user.matchCount === 0 && user.musicalGenres.length > 0),
+      noGenres: similarUsers.filter(user => user.musicalGenres.length === 0)
     }
 
-    return NextResponse.json(similarUsers)
+    console.log("Found users:", {
+      total: similarUsers.length,
+      matching: organizedUsers.matching.length,
+      noMatches: organizedUsers.noMatches.length,
+      noGenres: organizedUsers.noGenres.length
+    })
+
+    return NextResponse.json({
+      currentUserGenres,
+      users: organizedUsers,
+      debug: {
+        currentUser: {
+          id: currentUser._id,
+          name: currentUser.name,
+          genres: currentUserGenres
+        }
+      }
+    })
   } catch (error) {
     console.error("[SIMILAR_USERS]", error)
     return new NextResponse("Internal Error", { status: 500 })
